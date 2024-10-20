@@ -1,11 +1,14 @@
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
+import { useAppSelector } from "../redux/hooks";
 
 const NavbarWithText = () => {
+  const users = useAppSelector((state) => state.user.listUser);
+
   return (
     <Navbar className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="#home">Redux-Starter</Navbar.Brand>
+        <Navbar.Brand href="#home">Redux-Starter {users.length}</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
