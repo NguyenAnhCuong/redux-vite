@@ -10,16 +10,20 @@ import ModalDelete from "./Modal/ModalDelete";
 const UserTable = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector((state) => state.user.listUser);
+  const [dataUpdate, setDataUpdate] = useState({});
+  const [dataDelete, setDataDelete] = useState({});
   const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
   const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
 
-  const handleModalUpdate = () => {
+  const handleModalUpdate = (u: any) => {
     setShowModalUpdate(true);
+    setDataUpdate(u);
   };
 
-  const handleModalDelete = () => {
+  const handleModalDelete = (u: any) => {
     setShowModalDelete(true);
+    setDataDelete(u);
   };
 
   useEffect(() => {
@@ -34,7 +38,7 @@ const UserTable = () => {
       >
         Add new
       </button>
-      <Table striped>
+      <Table striped className="table table-bordered table-hover">
         <thead>
           <tr>
             <th>Id</th>
@@ -44,36 +48,42 @@ const UserTable = () => {
           </tr>
         </thead>
         <tbody>
-          {users?.map((user) => {
+          {users?.map((user, index) => {
             return (
-              <>
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleModalUpdate()}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-warning mx-3"
-                      onClick={() => handleModalDelete()}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              </>
+              <tr key={`row-${index + 1}`}>
+                <td>{user.id}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleModalUpdate(user)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-warning mx-3"
+                    onClick={() => handleModalDelete(user)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
             );
           })}
         </tbody>
       </Table>
       <ModalCreate show={showModalCreate} setShow={setShowModalCreate} />
-      <ModalUpdate show={showModalUpdate} setShow={setShowModalUpdate} />
-      <ModalDelete show={showModalDelete} setShow={setShowModalDelete} />
+      <ModalUpdate
+        show={showModalUpdate}
+        setShow={setShowModalUpdate}
+        dataUpdate={dataUpdate}
+      />
+      <ModalDelete
+        show={showModalDelete}
+        setShow={setShowModalDelete}
+        dataDelete={dataDelete}
+      />
     </>
   );
 };

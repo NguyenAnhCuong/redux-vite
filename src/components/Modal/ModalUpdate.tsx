@@ -1,20 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { UpdateUser } from "../../redux/users/user.slice";
+import { toast } from "react-toastify";
 
 const ModalUpdate = (props: any) => {
-  const { show, setShow } = props;
+  const { show, setShow, dataUpdate } = props;
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
+  const dispatch = useAppDispatch();
+  const id = dataUpdate.id;
 
-  const handleClose = () => setShow(false);
-  const handleSubmit = () => {};
+  useEffect(() => {
+    if (dataUpdate) {
+      setEmail(dataUpdate.email || "");
+      setName(dataUpdate.name || "");
+    }
+  }, [dataUpdate]);
+
+  const handleClose = () => {
+    setShow(false);
+    setEmail("");
+    setName("");
+  };
+  const handleSubmit = () => {
+    dispatch(UpdateUser({ email, name, id }));
+    handleClose();
+    toast.success("Update success");
+  };
 
   return (
     <>
       <Modal show={show} onHide={handleClose} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Create New</Modal.Title>
+          <Modal.Title>Update</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="form-group">

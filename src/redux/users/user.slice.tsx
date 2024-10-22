@@ -51,6 +51,44 @@ export const CreateUser = createAsyncThunk(
   }
 );
 
+export const UpdateUser = createAsyncThunk(
+  "users/UpdateUser",
+  async (payload: any, thunkAPI) => {
+    const res = await fetch(`http://localhost:8000/users/${payload.id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        email: payload.email,
+        name: payload.name,
+      }),
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    const data = await res.json();
+    if (data && data.id) {
+      thunkAPI.dispatch(fetchListUser());
+    }
+
+    return data;
+  }
+);
+
+export const DeleteUser = createAsyncThunk(
+  "users/DeleteUser",
+  async (payload: any, thunkAPI) => {
+    const res = await fetch(`http://localhost:8000/users/${payload.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    const data = await res.json();
+    thunkAPI.dispatch(fetchListUser());
+
+    return data;
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
